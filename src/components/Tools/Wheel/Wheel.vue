@@ -25,17 +25,23 @@
         <div class="wheel-section">
           <div class="wheel-wrapper">
             <div 
-              ref="wheel" 
               class="wheel"
               :style="wheelStyle"
             >
-              <div 
-                v-for="(option, index) in options" 
-                :key="index"
-                class="wheel-sector"
-                :style="getSectorStyle(index)"
+              <div
+                v-for="(option, index) in options"
+                :key="`${index}-${option}`"
+                class="wheel-label-wrap"
+                :style="{ transform: `rotate(${getLabelDeg(index)}deg)` }"
               >
-                <div class="sector-text">{{ option }}</div>
+                <span
+                  class="wheel-label-text"
+                  :class="{ 'is-radial': isCrowded }"
+                  :style="getLabelTextStyle(index)"
+                  :title="option"
+                >
+                  {{ displayOption(option) }}
+                </span>
               </div>
               <div class="wheel-center"></div>
             </div>
@@ -79,116 +85,125 @@ const optionsText = ref('');
 const options = ref<string[]>([]);
 const isSpinning = ref(false);
 const result = ref<string>('');
-// const wheel = ref<HTMLElement | null>(null);
 const rotation = ref(0);
 
-// 颜色列表
 const colors = [
   '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57',
   '#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43'
 ];
 
-// 解析选项
 const parseOptions = () => {
-  const newOptions = optionsText.value
+  options.value = optionsText.value
     .split('\n')
     .map(option => option.trim())
     .filter(option => option !== '');
-  options.value = newOptions;
 };
 
-// 更新转盘
 const updateWheel = () => {
   parseOptions();
   result.value = '';
+  rotation.value = 0;
 };
 
-// 清空选项
 const clearOptions = () => {
   optionsText.value = '';
   options.value = [];
   result.value = '';
+  rotation.value = 0;
 };
 
-// 转盘样式
+const conicGradient = computed(() => {
+  const count = options.value.length;
+  if (count === 0) {
+    return '#e5e7eb';
+  }
+  const angle = 360 / count;
+  const stops = options.value.map((_, index) => {
+    const color = colors[index % colors.length];
+    const start = index * angle;
+    const end = (index + 1) * angle;
+    return `${color} ${start}deg ${end}deg`;
+  });
+  return `conic-gradient(from -90deg, ${stops.join(', ')})`;
+});
+
 const wheelStyle = computed(() => {
   return {
-    transform: `rotate(${rotation.value}deg)`
+    transform: `rotate(${rotation.value}deg)`,
+    background: conicGradient.value,
   };
 });
 
-// 获取扇形样式
-const getSectorStyle = (index: number) => {
+const getLabelDeg = (index: number) => {
+  const count = options.value.length;
+  if (count === 0) return 0;
+  const slice = 360 / count;
+  return index * slice + slice / 2;
+};
+
+const isCrowded = computed(() => options.value.length > 8);
+
+const displayOption = (option: string) => {
+  const count = options.value.length;
+  const maxChars = count > 20 ? 3 : count > 12 ? 4 : count > 8 ? 6 : 10;
+  if (option.length <= maxChars) return option;
+  return `${option.slice(0, maxChars)}…`;
+};
+
+const getLabelTextStyle = (index: number) => {
   const count = options.value.length;
   if (count === 0) return {};
-  
-  const angle = 360 / count;
-  const startAngle = index * angle;
-  const endAngle = (index + 1) * angle;
-  
-  // 计算扇形路径
-  const radius = 150;
-  const centerX = radius;
-  const centerY = radius;
-  
-  const startX = centerX + radius * Math.cos((startAngle - 90) * Math.PI / 180);
-  const startY = centerY + radius * Math.sin((startAngle - 90) * Math.PI / 180);
-  const endX = centerX + radius * Math.cos((endAngle - 90) * Math.PI / 180);
-  const endY = centerY + radius * Math.sin((endAngle - 90) * Math.PI / 180);
-  
-  // const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
-  
-  // const path = `M ${centerX} ${centerY} L ${startX} ${startY} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY} Z`;
-  
+  if (!isCrowded.value) {
+    return {
+      transform: `translateX(-50%) rotate(${-getLabelDeg(index)}deg)`,
+      fontSize: count <= 5 ? '16px' : '14px',
+      top: '20%',
+      maxWidth: '72px',
+    };
+  }
+  const fontSize = Math.max(10, Math.min(13, Math.round(220 / count)));
   return {
-    backgroundColor: colors[index % colors.length],
-    clipPath: `polygon(50% 50%, ${startX}px ${startY}px, ${endX}px ${endY}px)`
+    transform: 'translate(-50%, -50%) rotate(90deg)',
+    fontSize: `${fontSize}px`,
+    top: '22%',
+    maxWidth: count > 18 ? '70px' : '88px',
   };
 };
 
-// 旋转转盘
 const spinWheel = () => {
   if (isSpinning.value || options.value.length < 2) {
     return;
   }
-  
+
   isSpinning.value = true;
   result.value = '';
-  
-  // 随机旋转角度（3-5圈）
+
   const randomRotation = 360 * (3 + Math.random() * 2);
-  const finalRotation = rotation.value + randomRotation;
-  
-  // 计算最终指向的选项
+  const startRotation = rotation.value;
+  const finalRotation = startRotation + randomRotation;
   const anglePerOption = 360 / options.value.length;
-  const normalizedRotation = finalRotation % 360;
-  const selectedIndex = Math.floor((360 - normalizedRotation) / anglePerOption) % options.value.length;
-  
-  // 执行旋转动画
-  const duration = 3000 + Math.random() * 2000; // 3-5秒
+  const selectedIndex = Math.floor(((360 - (finalRotation % 360)) % 360) / anglePerOption) % options.value.length;
+  const duration = 3000 + Math.random() * 2000;
   const startTime = performance.now();
-  
+
   const animate = (currentTime: number) => {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    
-    // 使用缓动函数
     const easeOut = 1 - Math.pow(1 - progress, 3);
-    rotation.value = rotation.value + randomRotation * easeOut;
-    
+    rotation.value = startRotation + randomRotation * easeOut;
+
     if (progress < 1) {
       requestAnimationFrame(animate);
     } else {
-      // 旋转结束
+      rotation.value = finalRotation;
       isSpinning.value = false;
       result.value = options.value[selectedIndex];
     }
   };
-  
+
   requestAnimationFrame(animate);
 };
 
-// 初始示例
 optionsText.value = '选项1\n选项2\n选项3\n选项4\n选项5';
 parseOptions();
 </script>
@@ -224,28 +239,34 @@ parseOptions();
   position: relative;
   border-radius: 50%;
   overflow: hidden;
-  transition: transform 0.3s ease;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-.wheel-sector {
+.wheel-label-wrap {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: bold;
-  font-size: 14px;
-  text-align: center;
-  padding: 20px;
-  box-sizing: border-box;
+  inset: 0;
+  pointer-events: none;
 }
 
-.sector-text {
-  max-width: 80px;
-  word-break: break-word;
+.wheel-label-text {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  max-width: 72px;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wheel-label-text.is-radial {
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .wheel-center {
@@ -263,14 +284,15 @@ parseOptions();
 
 .wheel-pointer {
   position: absolute;
-  top: -10px;
+  top: -8px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 25px solid #ff6b6b;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 24px solid #ff6b6b;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
   z-index: 20;
 }
 

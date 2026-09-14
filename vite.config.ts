@@ -23,7 +23,10 @@ export default defineConfig(({command, mode}) => {
     ],
     resolve: {
       alias: {
-        "@": path.resolve("./src")  //相对路径别名配置， 使用@替代src
+        "@": path.resolve("./src"),  //相对路径别名配置， 使用@替代src
+        // v-code-diff 的 package.json 指向 dist/index.es.js，该文件由 postinstall 生成；
+        // pnpm 经常跳过该脚本，打包时改为直接使用 Vue3 构建产物。
+        "v-code-diff": path.resolve(process.cwd(), "node_modules/v-code-diff/dist/v3/index.es.js"),
       }
     },
     server: {

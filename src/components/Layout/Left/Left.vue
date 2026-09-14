@@ -25,9 +25,15 @@ const parseLeftAdv = (raw: string): LeftAdvItem[] => {
 
 const appName = ref(import.meta.env.VITE_APP_TITLE || '工具坊')
 const appNet = ref(import.meta.env.VITE_APP_DESC || '')
+const leftAdvUpperRaw = import.meta.env.VITE_LEFT_ADV_UPPER || ''
+const leftAdvUpperList = ref<LeftAdvItem[]>(parseLeftAdv(leftAdvUpperRaw))
+const leftAdvUpperHtml = ref(leftAdvUpperList.value.length ? '' : leftAdvUpperRaw)
 const leftAdvRaw = import.meta.env.VITE_LEFT_ADV || ''
 const leftAdvList = ref<LeftAdvItem[]>(parseLeftAdv(leftAdvRaw))
 const leftAdvHtml = ref(leftAdvList.value.length ? '' : leftAdvRaw)
+const showLeftAdv = Boolean(
+  leftAdvUpperList.value.length || leftAdvUpperHtml.value || leftAdvList.value.length || leftAdvHtml.value
+)
 //菜单选中
 const defaultActive = ref('')
 //默认展开的菜单
@@ -133,28 +139,51 @@ onMounted(async () => {
         </el-menu>
       </div>
       
-      <!-- 广告位：JSON 配置可点击轮播，非 JSON 仍按 HTML 渲染 -->
-      <div class="ad-container" v-if="leftAdvList.length">
-        <el-carousel
-          height="130px"
-          :autoplay="true"
-          :interval="4000"
-          indicator-position="inside"
-          arrow="hover"
-        >
-          <el-carousel-item v-for="(item, index) in leftAdvList" :key="index">
-            <a
-              class="ad-link"
-              :href="item.url || 'javascript:void(0)'"
-              :target="item.url ? '_blank' : undefined"
-              rel="noopener noreferrer"
-            >
-              <el-image class="ad-image" :src="item.img" fit="cover" />
-            </a>
-          </el-carousel-item>
-        </el-carousel>
+      <div class="ad-stack" v-if="showLeftAdv">
+        <!-- 上方广告位：独立配置，不影响底部轮播 -->
+        <div class="ad-container" v-if="leftAdvUpperList.length">
+          <el-carousel
+            height="130px"
+            :autoplay="true"
+            :interval="4000"
+            arrow="hover"
+          >
+            <el-carousel-item v-for="(item, index) in leftAdvUpperList" :key="index">
+              <a
+                class="ad-link"
+                :href="item.url || 'javascript:void(0)'"
+                :target="item.url ? '_blank' : undefined"
+                rel="noopener noreferrer"
+              >
+                <el-image class="ad-image" :src="item.img" fit="cover" />
+              </a>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+        <div class="ad-container" v-else-if="leftAdvUpperHtml" v-html="leftAdvUpperHtml"></div>
+
+        <!-- 底部广告位：JSON 配置可点击轮播，非 JSON 仍按 HTML 渲染 -->
+        <div class="ad-container" v-if="leftAdvList.length">
+          <el-carousel
+            height="130px"
+            :autoplay="true"
+            :interval="4000"
+            arrow="hover"
+          >
+            <el-carousel-item v-for="(item, index) in leftAdvList" :key="index">
+              <a
+                class="ad-link"
+                :href="item.url || 'javascript:void(0)'"
+                :target="item.url ? '_blank' : undefined"
+                rel="noopener noreferrer"
+              >
+                <el-image class="ad-image" :src="item.img" fit="cover" />
+              </a>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+        <div class="ad-container" v-else-if="leftAdvHtml" v-html="leftAdvHtml"></div>
       </div>
-      <div class="ad-container" v-else-if="leftAdvHtml" v-html="leftAdvHtml"></div>
     </el-scrollbar>
   <!-- </div> -->
 </template>
@@ -247,11 +276,19 @@ onMounted(async () => {
 }
 
 /* 广告位样式 */
-.ad-container {
+.ad-stack {
   position: fixed;
   bottom: 20px;
   left: 20px;
   width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 10;
+}
+
+.ad-container {
+  width: 100%;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
