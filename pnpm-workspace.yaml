@@ -1,0 +1,11 @@
+allowBuilds:
+  '@parcel/watcher': set this to true or false
+  canvas: set this to true or false
+  core-js: set this to true or false
+  es5-ext: set this to true or false
+  esbuild: set this to true or false
+  less: set this to true or false
+  puppeteer: set this to true or false
+  v-code-diff: set this to true or false
+  vue-demi: set this to true or false
+  x-data-spreadsheet: set this to true or false
