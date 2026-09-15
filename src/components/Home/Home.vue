@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { RouterLink } from "vue-router"
 import { StarFilled } from '@element-plus/icons-vue'
 import { useToolsStore } from '@/store/modules/tools'
@@ -8,6 +8,18 @@ import { useRoute } from "vue-router"
 //store
 const toolsStore = useToolsStore()
 const route = useRoute()
+const adScriptId = 'profitablerate-home-ad-script'
+
+const loadHomeAd = () => {
+  if (!document.getElementById(adScriptId)) {
+    const script = document.createElement('script')
+    script.id = adScriptId
+    script.async = true
+    script.dataset.cfasync = 'false'
+    script.src = 'https://pl31325646.profitableratecpmnetwork.com/fbcb838137ee667edfeeabc0229c433c/invoke.js'
+    document.body.appendChild(script)
+  }
+}
 
 // 取消收藏
 const removeCollect = (url: string) => {
@@ -21,11 +33,16 @@ const removeCollect = (url: string) => {
 
 onMounted(() => {
   toolsStore.loadCollectedTools()
+  loadHomeAd()
   if (route.query && route.query.value) {//底部导航跳转过来的则定位到响应位置
       document?.querySelector('#' + `${route.query.value}`)?.scrollIntoView();
   } else {//其他位置跳转过来不需要定位的则定位到顶部
       document?.querySelector('#collect')?.scrollIntoView()
   }
+})
+
+onUnmounted(() => {
+  document.getElementById(adScriptId)?.remove()
 })
 </script>
 
@@ -97,6 +114,11 @@ onMounted(() => {
           <!-- 占位 div -->
           <div class="w-[24%] c-md:w-[24%] c-sm:w-[32%] "></div>
       </div>
+    </div>
+
+    <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
     </div>
 
     <!-- 返回顶部 -->
