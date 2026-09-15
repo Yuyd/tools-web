@@ -86,10 +86,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!--  -->
-    <el-scrollbar>
+  <div class="left-panel">
       <!-- logo -->
-      <div class="flex justify-center">
+      <div class="flex justify-center shrink-0">
         <router-link class="flex flex-row h-24 logo-container p-4" to="/">
           <img class="h-12 w-auto rounded-lg mr-2 mt-auto mb-auto" src="@/assets/logo.png" :alt="appNet">
           <div class="flex flex-col  mt-auto mb-auto">
@@ -99,8 +98,8 @@ onMounted(async () => {
         </router-link>
       </div>
       <!-- menu -->
-      <!-- #f5f5fb -->
-      <div class="flex justify-center pl-8 pr-8">
+      <el-scrollbar class="menu-scroll">
+      <div class="flex justify-center pl-8 pr-8 pb-3">
         <el-menu
           class="w-[200px]"
           :default-active="defaultActive"
@@ -138,6 +137,7 @@ onMounted(async () => {
           </el-menu-item>
         </el-menu>
       </div>
+      </el-scrollbar>
       
       <div class="ad-stack" v-if="showLeftAdv">
         <!-- 上方广告位：独立配置，不影响底部轮播 -->
@@ -184,8 +184,7 @@ onMounted(async () => {
         </div>
         <div class="ad-container" v-else-if="leftAdvHtml" v-html="leftAdvHtml"></div>
       </div>
-    </el-scrollbar>
-  <!-- </div> -->
+  </div>
 </template>
 
 <style scoped>
@@ -275,12 +274,23 @@ onMounted(async () => {
   border-radius: 12px;
 }
 
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.menu-scroll {
+  flex: 1;
+  min-height: 0;
+  height: 0;
+}
+
 /* 广告位样式 */
 .ad-stack {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
+  flex-shrink: 0;
   width: 200px;
+  margin: 8px auto 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
