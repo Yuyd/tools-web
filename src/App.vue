@@ -14,7 +14,7 @@ const componentStore = useComponentStore()
   <el-container>
     <!-- left -->
     <transition name="left-sidebar">
-      <el-aside v-if="!componentStore.leftCom" class="fixed top-0 left-0 h-full z-10 c-md:block c-sm:hidden c-xs:hidden" width="240px">
+      <el-aside v-if="!componentStore.leftCom" class="fixed top-0 left-0 h-full overflow-hidden z-10 c-md:block c-sm:hidden c-xs:hidden" width="240px">
         <Left></Left>
       </el-aside>
     </transition>
@@ -24,6 +24,7 @@ const componentStore = useComponentStore()
       :with-header="false" 
       v-model="componentStore.leftComDrawer" 
       direction="ltr"
+      class="left-drawer"
       >
       <Left></Left>
     </el-drawer>
@@ -89,6 +90,12 @@ const componentStore = useComponentStore()
   transition: margin-left 0.3s ease;
 }
 </style>
+
+<style>
+.left-drawer .el-drawer__body {
+  height: 100%;
+  padding: 0;
+}
 
 <style>
 /* 全局科技感样式 */
