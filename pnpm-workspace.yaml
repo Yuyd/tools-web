@@ -5,7 +5,7 @@ allowBuilds:
   es5-ext: false
   esbuild: false
   less: false
-  puppeteer: false
+  puppeteer: true
   v-code-diff: false
   vue-demi: false
   x-data-spreadsheet: false
