@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm rebuild puppeteer && vue-tsc --noEmit && node --max_old_space_size=8192 node_modules/vite/bin/vite.js build --mode development",
-    "build:pro": "pnpm rebuild puppeteer && vue-tsc --noEmit && node --max_old_space_size=8192 node_modules/vite/bin/vite.js build --mode production",
+    "build": "node scripts/rebuild-puppeteer.mjs && vue-tsc --noEmit && node --max_old_space_size=8192 node_modules/vite/bin/vite.js build --mode development",
+    "build:pro": "node scripts/rebuild-puppeteer.mjs && vue-tsc --noEmit && node --max_old_space_size=8192 node_modules/vite/bin/vite.js build --mode production",
     "preview": "vite preview",
     "postinstall": "node node_modules/v-code-diff/scripts/postinstall.cjs"
   },

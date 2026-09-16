@@ -7,6 +7,7 @@ import {seoperender} from "./ssr.config";
 // https://vitejs.dev/config/
 export default defineConfig(({command, mode}) => {
   let env = loadEnv(mode, process.cwd())
+  const enableSeoPrerender = !process.env.CF_PAGES
   return {
     define: {  
       'process.env.NODE_ENV': JSON.stringify('production')  
@@ -19,7 +20,7 @@ export default defineConfig(({command, mode}) => {
         // Specify symbolId format
         symbolId: 'icon-[dir]-[name]',
       }),
-      seoperender()
+      ...(enableSeoPrerender ? [seoperender()] : [])
     ],
     resolve: {
       alias: {
