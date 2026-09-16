@@ -7,7 +7,16 @@ import {seoperender} from "./ssr.config";
 // https://vitejs.dev/config/
 export default defineConfig(({command, mode}) => {
   let env = loadEnv(mode, process.cwd())
-  const enableSeoPrerender = !process.env.CF_PAGES
+  const cwd = process.cwd().replace(/\\/g, '/')
+  const isCloudflarePages = Boolean(
+    process.env.CF_PAGES ||
+    process.env.CF_PAGES_BRANCH ||
+    process.env.CF_PAGES_COMMIT_SHA ||
+    process.env.CLOUDFLARE_PAGES ||
+    cwd.startsWith('/opt/buildhome/') ||
+    mode === 'cloudflare'
+  )
+  const enableSeoPrerender = !isCloudflarePages
   return {
     define: {  
       'process.env.NODE_ENV': JSON.stringify('production')  

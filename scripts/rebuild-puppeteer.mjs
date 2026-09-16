@@ -1,6 +1,15 @@
 import { spawnSync } from 'node:child_process'
 
-if (process.env.CF_PAGES) {
+const cwd = process.cwd().replace(/\\/g, '/')
+const isCloudflarePages = Boolean(
+  process.env.CF_PAGES ||
+  process.env.CF_PAGES_BRANCH ||
+  process.env.CF_PAGES_COMMIT_SHA ||
+  process.env.CLOUDFLARE_PAGES ||
+  cwd.startsWith('/opt/buildhome/')
+)
+
+if (isCloudflarePages) {
   console.log('Skip Puppeteer rebuild on Cloudflare Pages')
   process.exit(0)
 }
