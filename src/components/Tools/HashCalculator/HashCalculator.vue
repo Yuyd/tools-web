@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { ElMessage } from 'element-plus'
@@ -7,6 +7,8 @@ import { copy } from '@/utils/string'
 import { Md5 } from 'ts-md5'
 import CryptoJS from 'crypto-js'
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-HashCalculator-ad-script'
 const title = "Hash计算器"
 
 // 状态管理
@@ -156,6 +158,14 @@ const copyResult = () => {
 const clearInput = () => {
   inputText.value = ''
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -226,7 +236,11 @@ const clearInput = () => {
       </el-text>
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

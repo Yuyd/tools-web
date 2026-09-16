@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
+import { onMounted, onUnmounted, reactive } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { copy, genRandomStrByChars } from '@/utils/string'
 import { ElMessage } from 'element-plus'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+
+const adScriptId = 'profitablerate-RandomPassword-ad-script'
 const info = reactive({
   title: "随机密码生成",
   char: '',
@@ -109,11 +112,16 @@ const copyRes = async (resStr: string) => {
 }
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   //设置初始字符
   changeCheckBox(info.checkedNum, 0)
   changeCheckBox(info.checkedLower, 1)
   changeCheckBox(info.checkedUpper, 2)
   changeCheckBox(info.checkedSign, 3)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
 })
 </script>
 
@@ -157,9 +165,10 @@ onMounted(() => {
       </el-text> 
     </ToolDetail>
 
-    <!-- 广告位 -->
-    <div>广告</div>
-
+    <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
   </div>
 </template>
 

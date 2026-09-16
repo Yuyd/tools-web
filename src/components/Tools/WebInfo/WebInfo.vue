@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 // import { copy } from '@/utils/string'
 import { Jh_getTimeStamp } from '@/utils/time'
@@ -7,6 +7,8 @@ import { isUrl } from '@/utils/url'
 import { autoDown, getFileExtension } from '@/utils/file'
 import { useToolsStore } from '@/store/modules/tools'
 import { ElMessage } from 'element-plus'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-WebInfo-ad-script'
 const info = reactive({
   title: "网站favicon获取",
 })
@@ -51,6 +53,14 @@ const down = () => {
 // const copyRes = async (resStr: string) => {
 //   copy(resStr)
 // }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -96,7 +106,11 @@ const down = () => {
         </ul>
       </div>
     </div>
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

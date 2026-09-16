@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { reactive,ref,onMounted } from 'vue'
+import { reactive, ref, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import {jwtDecode} from 'jwt-decode'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-JWT-ad-script'
 const info = reactive({
   title: "JWT解析",
   token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0b29scy5yYW5ibG9ncy5jb20iLCJzdWIiOiJhcnlhIiwiYXVkIjoidGFvcmFuIiwiaWF0IjoxNzE3MDM2MzMzLCJleHAiOjE3MTcwMzY5MzN9.9v_eDdsPnvcY7qZatNnKvN9VEf7t7o72OgwhLS6gy6w',
@@ -32,7 +34,12 @@ const clear = () => {
 }
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   parser()
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
 })
 </script>
 
@@ -95,7 +102,11 @@ onMounted(() => {
       </el-text> 
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

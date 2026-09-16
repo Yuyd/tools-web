@@ -18,6 +18,9 @@ import pinia from './store'
 import { setupMdEditor } from './plugins/v-md-editor'
 //default-passive-events
 import 'default-passive-events'
+import { preloadNativeAd } from '@/utils/nativeAd'
+
+preloadNativeAd()
 
 
 const app = createApp(App)

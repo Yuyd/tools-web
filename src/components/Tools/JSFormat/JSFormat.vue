@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { copy } from '@/utils/string';
@@ -13,6 +13,8 @@ import * as prettierPluginEstree from "prettier/plugins/estree";
 import { ElMessage } from 'element-plus'
 import { minify } from "terser"
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-JSFormat-ad-script'
 const info = reactive({
   title: "js代码格式化/压缩",
   code: '',
@@ -66,6 +68,14 @@ const clear = () => {
 const copyRes = async () => {
   copy(info.code)
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -103,7 +113,11 @@ const copyRes = async () => {
         JS格式化/压缩工具,提供在线JS格式化、JS压缩、JS混淆
       </el-text> 
     </ToolDetail>
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

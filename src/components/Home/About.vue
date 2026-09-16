@@ -1,4 +1,27 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
+import { useToolsStore } from '@/store/modules/tools'
+import { useRoute } from "vue-router"
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+
+const toolsStore = useToolsStore()
+const route = useRoute()
+const adScriptId = 'profitablerate-about-ad-script'
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+  toolsStore.loadCollectedTools()
+  if (route.query && route.query.value) {//底部导航跳转过来的则定位到响应位置
+      document?.querySelector('#' + `${route.query.value}`)?.scrollIntoView();
+  } else {//其他位置跳转过来不需要定位的则定位到顶部
+      document?.querySelector('#collect')?.scrollIntoView()
+  }
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
+
 </script>
 
 <template>
@@ -17,6 +40,10 @@
       <p>
         <el-text>如果您发现了 Bug，或者某些功能未能按预期工作，请在 GitHub 仓库的 <el-link type="primary" target="_blank" href="https://github.com/Yuyd/tools-web/issues/new" class="">issues</el-link> 中提交错误报告。</el-text>
       </p> -->
+    </div>
+    <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
     </div>
   </div>
 </template>

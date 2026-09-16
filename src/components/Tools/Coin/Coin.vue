@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref,reactive } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-Coin-ad-script'
 // import { copy } from '@/utils/string'
 const info = reactive({
   title: "抛硬币",
@@ -21,6 +23,14 @@ const throwCoin = () => {
 // const copyRes = async (resStr: string) => {
 //   copy(resStr)
 // }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -48,7 +58,11 @@ const throwCoin = () => {
 			</el-text> 
 		</ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

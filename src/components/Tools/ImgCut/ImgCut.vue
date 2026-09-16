@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref,computed, watch } from 'vue'
+import { onMounted, reactive, ref, computed, watch, onUnmounted } from 'vue'
 import { UploadProps,UploadRawFile,genFileId } from 'element-plus'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-ImgCut-ad-script'
 const info = reactive({
   title: "图片切割",
 })
@@ -88,7 +90,12 @@ watch(cutImgStyle, () => {
 })
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
 
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
 })
 </script>
 
@@ -145,7 +152,11 @@ onMounted(() => {
         比如：九宫格切图广泛应用于微信朋友圈，微博等社交媒体。
       </el-text> 
     </ToolDetail>
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

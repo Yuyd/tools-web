@@ -5,6 +5,8 @@ import { Jh_getTimeStamp,Jh_timeStampToTime,Jh_convertTimeStamp } from '@/utils/
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { copy } from '@/utils/string'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-TimeTran-ad-script'
 const info = reactive({
   title: "时间戳转换",
   nowTime: Jh_getTimeStamp(),
@@ -45,11 +47,13 @@ const stop = () => {
 
 //进入
 onMounted(() => {
+  loadNativeAd(adScriptId)
   start()
 })
 
 //消亡
 onUnmounted(() => {
+  unloadNativeAd(adScriptId)
   stop()
 })
 
@@ -127,7 +131,11 @@ const copyRes = async () => {
       </el-text> 
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

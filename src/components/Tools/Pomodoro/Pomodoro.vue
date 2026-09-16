@@ -129,15 +129,21 @@
       </el-text>
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus';
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-Pomodoro-ad-script'
 const title = "番茄时钟"
 
 // 时间设置
@@ -255,6 +261,7 @@ const playNotification = () => {
 
 // 生命周期
 onMounted(() => {
+  loadNativeAd(adScriptId)
   // 从本地存储加载今日完成数
   const today = new Date().toDateString();
   const storedData = localStorage.getItem('pomodoro');
@@ -267,6 +274,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  unloadNativeAd(adScriptId)
   // 保存今日完成数到本地存储
   const today = new Date().toDateString();
   localStorage.setItem('pomodoro', JSON.stringify({

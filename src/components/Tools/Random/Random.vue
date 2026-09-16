@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-Random-ad-script'
 // import { copy } from '@/utils/string'
 const info = reactive({
   title: "生成随机数",
@@ -28,6 +30,14 @@ const random = () => {
 // const copyRes = async (resStr: string) => {
 //   copy(resStr)
 // }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -56,7 +66,11 @@ const random = () => {
       </el-text> 
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

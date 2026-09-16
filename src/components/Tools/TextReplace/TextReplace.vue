@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { ElMessage } from 'element-plus'
 import { copy } from '@/utils/string'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
 
+const adScriptId = 'profitablerate-TextReplace-ad-script'
 const title = "文本替换"
 
 // 状态管理
@@ -53,6 +55,14 @@ const clearInput = () => {
   findText.value = ''
   replaceText.value = ''
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -122,6 +132,10 @@ const clearInput = () => {
       </el-text>
     </ToolDetail>
 
+    <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
   </div>
 </template>
 

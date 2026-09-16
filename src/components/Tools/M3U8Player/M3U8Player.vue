@@ -48,14 +48,20 @@
       </el-text>
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-M3U8Player-ad-script'
 const title = "m3u8在线播放"
 
 const m3u8Url = ref('');
@@ -82,10 +88,15 @@ const clearUrl = () => {
 const exampleUrl = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   // 加载示例地址
   m3u8Url.value = exampleUrl;
   loadVideo();
 });
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <style scoped>

@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { reactive, ref, shallowRef, onBeforeUnmount } from 'vue'
+import { reactive, ref, shallowRef, onBeforeUnmount, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import html2canvas from "html2canvas";
 import '@wangeditor/editor/dist/css/style.css' // 引入富文本 css
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'  //富文本组件
 // import { copy } from '@/utils/string'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-TextToImg-ad-script'
 const info = reactive({
   title: "文本转图片",
   mode: 'default',
@@ -85,6 +87,14 @@ onBeforeUnmount(() => {
 // const copyRes = async (resStr: string) => {
 //   copy(resStr)
 // }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -141,7 +151,11 @@ onBeforeUnmount(() => {
         把文本转换成图片，生成长图，富文本自定义文字排版，可导出png，jpeg格式，可更换背景图，设置宽度，是好用的文本转图片工具
       </el-text> 
     </ToolDetail>
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

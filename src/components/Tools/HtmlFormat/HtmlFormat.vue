@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { copy } from '@/utils/string';
@@ -11,6 +11,8 @@ import * as prettier from "prettier/standalone";
 import * as parserHtml from 'prettier/parser-html';
 import { ElMessage } from 'element-plus';
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-HtmlFormat-ad-script'
 const info = reactive({
   title: "html格式化/压缩",
   code: '',
@@ -39,6 +41,14 @@ const clear = () => {
 const copyRes = async () => {
   copy(info.code)
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -75,7 +85,11 @@ const copyRes = async () => {
         提供在线html、xml格式化
       </el-text> 
     </ToolDetail>
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

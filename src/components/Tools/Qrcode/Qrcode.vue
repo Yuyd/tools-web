@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { reactive,ref } from 'vue'
+import { reactive, ref, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import QRCodeVue3 from 'qrcode-vue3'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import { ElMessage, type UploadFile } from 'element-plus'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-Qrcode-ad-script'
 const info = reactive({
   title: "二维码生成",
   content: '可在此输入文字或网址,右键图片另存为可保存图片',
@@ -53,6 +55,14 @@ const gen = () => {
   setQRSize()
   info.qrKey += 1
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -182,7 +192,11 @@ const gen = () => {
       </el-text> 
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

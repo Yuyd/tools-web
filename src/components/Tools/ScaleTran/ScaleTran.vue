@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { ElMessage } from 'element-plus'
@@ -8,6 +8,8 @@ import { isBinary, isOctal, isDecimal, isHexadecimal } from '@/utils/verify'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { scale58ToBase, scale62ToBase, scale64ToBase, baseToScale58, baseToScale62, baseToScale64 } from '@/utils/math'
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-ScaleTran-ad-script'
 const info = reactive({
   title: "常用进制转换",
   content: '',
@@ -191,6 +193,14 @@ const tran = () => {
 const copyRes = async (index: any) => {
   copy(info.tranOptions[index].tranValue)
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -256,7 +266,11 @@ const copyRes = async (index: any) => {
       </el-text> 
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

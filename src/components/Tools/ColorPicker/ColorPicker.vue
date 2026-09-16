@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive,ref,onMounted } from 'vue'
+import { reactive, ref, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { copy } from '@/utils/string'
@@ -10,6 +10,8 @@ import hwbPlugin from 'colord/plugins/hwb';
 import namesPlugin from 'colord/plugins/names';
 import lchPlugin from 'colord/plugins/lch';
 import labPlugin from 'colord/plugins/lab';
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-ColorPicker-ad-script'
 extend([cmykPlugin, hwbPlugin, namesPlugin, lchPlugin, labPlugin]);
 
 const info = reactive({
@@ -49,9 +51,14 @@ const copyRes = async (resStr: string) => {
 
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   change()
 })
 
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -255,7 +262,11 @@ onMounted(() => {
 			</el-text> 
 		</ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { useRoute } from "vue-router"
@@ -11,6 +11,8 @@ import Pressure from './Pressure.vue'
 import Temperature from './Temperature.vue'
 import Time from './Time.vue'
 import Weight from './Weight.vue'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-Unit-ad-script'
 const info = reactive({
   title: "单位转换",
   activeName: 'lengthTab',
@@ -23,6 +25,7 @@ const handleClick = () => {
 }
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   if (route.query.active) {
     switch (route.query.active) {
       case 'area':
@@ -51,6 +54,10 @@ onMounted(() => {
         break;
     }
   }
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
 })
 </script>
 
@@ -99,7 +106,11 @@ onMounted(() => {
       </el-text> 
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

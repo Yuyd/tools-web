@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue"
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import  SignImageCore  from './SignImageCore.vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
@@ -7,6 +7,8 @@ import { UploadProps, UploadInstance, UploadRawFile, genFileId } from 'element-p
 import { autoDown } from '@/utils/file'
 import { Jh_getTimeStamp } from '@/utils/time'
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-SignImage-ad-script'
 // 图片处理
 const info = reactive({
   title:"在线编辑图片",
@@ -46,6 +48,14 @@ const uploadExceed: UploadProps['onExceed'] = (files) => {
 const saveImg = () => {
   refSignImageCore.value!.save()
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -89,7 +99,11 @@ const saveImg = () => {
       </el-text> 
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

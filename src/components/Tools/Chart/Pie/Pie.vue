@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import Spreadsheet from 'x-data-spreadsheet'
 import 'x-data-spreadsheet/dist/locale/zh-cn';
 import { UploadProps,UploadRawFile,genFileId } from 'element-plus'
@@ -9,6 +9,8 @@ import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { toEchartsPieData, toSpreadsheetData, tranObjAndColumn } from '@/utils/echarts'
 import * as echarts from 'echarts'
 import * as XLSX from 'xlsx'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-Pie-ad-script'
 const info = reactive({
   title: "饼图",
 })
@@ -322,6 +324,7 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
 // }
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   //初始化数据
   seriesData.value = tranObjAndColumn([
     colunmData.value, valueData.value
@@ -339,6 +342,10 @@ onMounted(() => {
   // console.log(rowsData.value)
 })
 
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -479,7 +486,11 @@ onMounted(() => {
         支持超全的自定义配置，轻松实现你的个性化图表需求<br>
       </el-text> 
     </ToolDetail>
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

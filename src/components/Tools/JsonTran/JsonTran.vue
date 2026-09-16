@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { transferred, copy } from '@/utils/string';
@@ -10,6 +10,8 @@ import '@codemirror/search';
 import '@codemirror/state';
 import '@codemirror/commands';
 // import { syntaxTree } from '@codemirror/language';
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-JsonTran-ad-script'
 // import { linter, Diagnostic } from '@codemirror/lint';
 
 // const regexpLinter = linter(view => {
@@ -77,6 +79,14 @@ const clear = () => {
 const copyRes = async () => {
   copy(info.code)
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -132,7 +142,11 @@ const copyRes = async () => {
         JSON 工具提供实时编辑和预览JSON 数据，语法高亮、校验、格式化、转义，去转义、压缩等功能，可以提高阅读修改的效率和准确性
       </el-text> 
     </ToolDetail>
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

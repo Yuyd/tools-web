@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { onBeforeMount, reactive,ref } from 'vue'
+import { onBeforeMount, reactive, ref, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
-// import { ElMessage } from 'element-plus'
 import vueDanmaku  from 'vue3-danmaku'  //https://www.npmjs.com/package/vue3-danmaku
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-Barrage-ad-script'
+// import { ElMessage } from 'element-plus'
 const info = reactive({
   title: "手持弹幕",
   content: '工具坊',
@@ -54,6 +56,14 @@ const formatBarrage = () => {
 
 onBeforeMount(() => {
   setExtraStyle('visibility: hidden;')
+})
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
 })
 </script>
 
@@ -123,7 +133,11 @@ onBeforeMount(() => {
       </el-text> 
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

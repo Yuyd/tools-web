@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import Spreadsheet from 'x-data-spreadsheet'
 import 'x-data-spreadsheet/dist/locale/zh-cn';
 import { UploadProps,UploadRawFile,genFileId } from 'element-plus'
@@ -9,6 +9,8 @@ import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { toEchartsData, toSpreadsheetData } from '@/utils/echarts'
 import * as echarts from 'echarts'
 import * as XLSX from 'xlsx'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-Bar-ad-script'
 const info = reactive({
   title: "柱状图",
 })
@@ -318,6 +320,7 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
 // }
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   //init echart dom
   chartDom.value = document.getElementById('main')
   //设置画布宽高
@@ -331,6 +334,10 @@ onMounted(() => {
   // console.log(rowsData.value)
 })
 
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -471,7 +478,11 @@ onMounted(() => {
         无需任何基础即可上手，并且支持超全的自定义配置，轻松实现你的个性化图表需求<br>
       </el-text> 
     </ToolDetail>
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

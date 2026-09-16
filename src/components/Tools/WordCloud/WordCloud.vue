@@ -66,16 +66,22 @@
       </el-text>
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, onUnmounted } from 'vue'
 import * as echarts from 'echarts';
 import 'echarts-wordcloud';
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-WordCloud-ad-script'
 const title = "词云生成"
 
 const inputText = ref('');
@@ -214,11 +220,16 @@ const handleResize = () => {
 };
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   window.addEventListener('resize', handleResize);
   // 示例文本
   inputText.value = '词云 生成 工具 在线 文本 分析 可视化 数据 图表 形状 颜色 字体 大小 频率 统计 单词 词组 自定义 圆形 矩形 三角形 心形 暖色 冷色 多彩';
   generateWordCloud();
 });
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <style scoped>

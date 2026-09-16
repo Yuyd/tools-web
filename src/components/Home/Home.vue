@@ -5,21 +5,11 @@ import { StarFilled } from '@element-plus/icons-vue'
 import { useToolsStore } from '@/store/modules/tools'
 import { ElMessage } from 'element-plus'
 import { useRoute } from "vue-router"
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
 //store
 const toolsStore = useToolsStore()
 const route = useRoute()
 const adScriptId = 'profitablerate-home-ad-script'
-
-const loadHomeAd = () => {
-  if (!document.getElementById(adScriptId)) {
-    const script = document.createElement('script')
-    script.id = adScriptId
-    script.async = true
-    script.dataset.cfasync = 'false'
-    script.src = 'https://pl31325646.profitableratecpmnetwork.com/fbcb838137ee667edfeeabc0229c433c/invoke.js'
-    document.body.appendChild(script)
-  }
-}
 
 // 取消收藏
 const removeCollect = (url: string) => {
@@ -32,17 +22,17 @@ const removeCollect = (url: string) => {
 }
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   toolsStore.loadCollectedTools()
-  loadHomeAd()
   if (route.query && route.query.value) {//底部导航跳转过来的则定位到响应位置
       document?.querySelector('#' + `${route.query.value}`)?.scrollIntoView();
   } else {//其他位置跳转过来不需要定位的则定位到顶部
-      document?.querySelector('#collect')?.scrollIntoView()
+    document?.querySelector('#collect')?.scrollIntoView()
   }
 })
 
 onUnmounted(() => {
-  document.getElementById(adScriptId)?.remove()
+  unloadNativeAd(adScriptId)
 })
 </script>
 

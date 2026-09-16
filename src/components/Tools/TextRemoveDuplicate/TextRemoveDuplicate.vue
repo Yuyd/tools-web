@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { copy } from '@/utils/string'
 
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-TextRemoveDuplicate-ad-script'
 const info = reactive({
   title: "文本去重",
   content: '',
@@ -29,6 +31,14 @@ const removeDuplicate = computed(() => {
 const copyRes = async () => {
   copy(info.tranRes)
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -57,7 +67,11 @@ const copyRes = async () => {
       </el-text> 
     </ToolDetail>
 
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

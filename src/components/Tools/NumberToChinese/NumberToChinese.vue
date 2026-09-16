@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted, onUnmounted } from 'vue'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
 import ToolDetail from '@/components/Layout/ToolDetail/ToolDetail.vue'
 import { copy, numberToChinese } from '@/utils/string'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+const adScriptId = 'profitablerate-NumberToChinese-ad-script'
 const info = reactive({
   title: "数字转金额大写",
   content: '',
@@ -22,6 +24,14 @@ const clear = () => {
 const copyRes = async (resStr: string) => {
   copy(resStr)
 }
+
+onMounted(() => {
+  loadNativeAd(adScriptId)
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
+})
 </script>
 
 <template>
@@ -50,7 +60,11 @@ const copyRes = async (resStr: string) => {
         可以将阿拉伯数字金额转换为中文大写金额的在线工具;用户输入阿拉伯数字金额，如100，会立即转换成“壹佰”的中文
       </el-text> 
     </ToolDetail>
-  </div>
+      <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
+    </div>
+</div>
 </template>
 
 <style scoped>

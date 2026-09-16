@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
+import { onMounted, onUnmounted, reactive } from 'vue'
 import { useToolsStore } from '@/store/modules/tools'
 import { isIp } from '@/utils/verify'
 import { ElMessage } from 'element-plus'
 import DetailHeader from '@/components/Layout/DetailHeader/DetailHeader.vue'
+import { loadNativeAd, unloadNativeAd } from '@/utils/nativeAd'
+
+const adScriptId = 'profitablerate-Ip-ad-script'
 
 const info = reactive({
   title: "IP查询",
@@ -37,7 +40,12 @@ const search = async (type: string) => {
 }
 
 onMounted(() => {
+  loadNativeAd(adScriptId)
   search('')
+})
+
+onUnmounted(() => {
+  unloadNativeAd(adScriptId)
 })
 </script>
 
@@ -69,6 +77,11 @@ onMounted(() => {
         </div>
         
       </div>
+    </div>
+
+    <!-- 底部广告 -->
+    <div class="home-ad mt-8">
+      <div id="container-fbcb838137ee667edfeeabc0229c433c"></div>
     </div>
   </div>
 </template>
